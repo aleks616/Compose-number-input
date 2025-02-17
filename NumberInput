@@ -1,0 +1,56 @@
+@Composable
+fun NumberInput(
+    arrowUp:Int=android.R.drawable.arrow_up_float,
+    arrowDown:Int=android.R.drawable.arrow_down_float,
+    arrowTint:androidx.compose.ui.graphics.Color=Color.White,
+    arrowHeight:Dp=24.dp,
+    minValue:Int=0,
+    maxValue:Int=100,
+    step:Int=1,
+    onValueChange:(String) -> Unit
+){
+    var value by remember {mutableStateOf("0")}
+    Row(
+        verticalAlignment=Alignment.CenterVertically,
+        horizontalArrangement=Arrangement.Center,
+        modifier=Modifier.fillMaxWidth()
+    ){
+        BetterTextField(
+            value=value,
+            onValueChange={value=it},
+            textFieldModifier=Modifier.width(150.dp),
+            imeAction=ImeAction.Done,
+            keyboardType=KeyboardType.Number,
+            trailingIcon={Column{
+                IconButton(
+                    onClick={
+                        if(value.isDigitsOnly()) if(value.toInt()<=maxValue-step) value=(value.toInt()+step).toString()
+                        val newValue=(value.toInt()).toString()
+                        onValueChange(newValue)
+                    },
+                    modifier=Modifier.height(arrowHeight)
+                ){
+                    Icon(
+                        painter=painterResource(id=arrowUp),
+                        contentDescription="Increase",
+                        tint=arrowTint
+                    )
+                }
+                IconButton(
+                    onClick={
+                        if(value.isDigitsOnly()) if(value.toInt()>=minValue+step) value=(value.toInt()-step).toString()
+                        val newValue=(value.toInt()).toString()
+                        onValueChange(newValue)
+                    },
+                    modifier=Modifier.height(arrowHeight)
+                ){
+                    Icon(
+                        painter=painterResource(id=arrowDown),
+                        contentDescription="Decrease",
+                        tint=arrowTint
+                    )
+                }
+            }}
+        )
+    }
+}
